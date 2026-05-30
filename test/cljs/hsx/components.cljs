@@ -52,3 +52,12 @@
      [:div
       (callable-button buttonOneValue onClick)
       (callable-button buttonTwoValue onClick)])))
+
+(def ShorthandTags
+  (hsx/reactify-component
+   (fn [_props]
+     [:.outer
+      [:#target "Target"]
+      [:div.#legacy-id "Legacy"]
+      [:button.#action.primary "Action"]
+      [:button.secondary#secondary-action "Secondary"]])))

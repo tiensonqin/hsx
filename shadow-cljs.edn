@@ -11,7 +11,8 @@
                                      :FragmentedButton   hsx.components/FragmentedButton
                                      :SeqButton          hsx.components/SeqButton
                                      :CallableButton     hsx.components/CallableButton
-                                     :CallableButtonList hsx.components/CallableButtonList}}}}
+                                     :CallableButtonList hsx.components/CallableButtonList
+                                     :ShorthandTags      hsx.components/ShorthandTags}}}}
   :examples
   {:target     :browser
    :output-dir "public/js"

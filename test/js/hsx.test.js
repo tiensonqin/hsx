@@ -1,5 +1,5 @@
 // test/js/hsx.test.js
-import { Button, ButtonViaReactElem, FragmentedButton, SeqButton, CallableButton, CallableButtonList } from '../../target/test/hsx-test';
+import { Button, ButtonViaReactElem, FragmentedButton, SeqButton, CallableButton, CallableButtonList, ShorthandTags } from '../../target/test/hsx-test';
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from "react";
 
@@ -68,4 +68,14 @@ test('CallableButtonList keeps function-called components interactive', () => {
     fireEvent.click(screen.getByText(/ButtonOne/i));
     fireEvent.click(screen.getByText(/ButtonTwo/i));
     expect(handleClick).toHaveBeenCalledTimes(2);
+});
+
+test('ShorthandTags renders div defaults and legacy id syntax', () => {
+    const { container } = render(<ShorthandTags />);
+
+    expect(container.querySelector('div.outer')).not.toBeNull();
+    expect(container.querySelector('div#target').textContent).toBe('Target');
+    expect(container.querySelector('div#legacy-id').textContent).toBe('Legacy');
+    expect(container.querySelector('button#action.primary').textContent).toBe('Action');
+    expect(container.querySelector('button#secondary-action.secondary').textContent).toBe('Secondary');
 });
