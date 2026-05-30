@@ -36,3 +36,19 @@
         (for [props buttons]
           ^{:key (str "button-" (:children props))}
           [:> Button props])]))))
+
+(hsx/defc callable-button
+  [value on-click]
+  [:button {:on-click on-click} value])
+
+(def CallableButton
+  (hsx/reactify-component
+   (fn [{:keys [onClick children]}]
+     (callable-button children onClick))))
+
+(def CallableButtonList
+  (hsx/reactify-component
+   (fn [{:keys [onClick buttonOneValue buttonTwoValue]}]
+     [:div
+      (callable-button buttonOneValue onClick)
+      (callable-button buttonTwoValue onClick)])))

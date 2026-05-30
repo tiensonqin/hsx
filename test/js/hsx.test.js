@@ -1,5 +1,5 @@
 // test/js/hsx.test.js
-import { Button, ButtonViaReactElem, FragmentedButton, SeqButton } from '../../target/test/hsx-test';
+import { Button, ButtonViaReactElem, FragmentedButton, SeqButton, CallableButton, CallableButtonList } from '../../target/test/hsx-test';
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from "react";
 
@@ -48,5 +48,24 @@ test('SeqButton calls onClick when clicked', () => {
     fireEvent.click(screen.getByText(/ButtonTwo/i));
 
     // Assert the click handler was called
+    expect(handleClick).toHaveBeenCalledTimes(2);
+});
+
+test('CallableButton calls onClick when rendered through a function call', () => {
+    const handleClick = jest.fn();
+
+    render(<CallableButton onClick={handleClick}>Click Me</CallableButton>);
+
+    fireEvent.click(screen.getByText(/Click Me/i));
+    expect(handleClick).toHaveBeenCalledTimes(1);
+});
+
+test('CallableButtonList keeps function-called components interactive', () => {
+    const handleClick = jest.fn();
+
+    render(<CallableButtonList onClick={handleClick} buttonOneValue="ButtonOne" buttonTwoValue="ButtonTwo" />)
+
+    fireEvent.click(screen.getByText(/ButtonOne/i));
+    fireEvent.click(screen.getByText(/ButtonTwo/i));
     expect(handleClick).toHaveBeenCalledTimes(2);
 });

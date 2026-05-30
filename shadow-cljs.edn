@@ -9,7 +9,9 @@
    :modules    {:hsx-test {:exports {:Button             hsx.components/Button
                                      :ButtonViaReactElem hsx.components/ButtonViaReactElem
                                      :FragmentedButton   hsx.components/FragmentedButton
-                                     :SeqButton          hsx.components/SeqButton}}}}
+                                     :SeqButton          hsx.components/SeqButton
+                                     :CallableButton     hsx.components/CallableButton
+                                     :CallableButtonList hsx.components/CallableButtonList}}}}
   :examples
   {:target     :browser
    :output-dir "public/js"

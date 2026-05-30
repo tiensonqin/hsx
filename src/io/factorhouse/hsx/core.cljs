@@ -7,8 +7,12 @@
             [io.factorhouse.hsx.tag :as tag]))
 
 (def ^:private react-memo react/memo)
+(def ^:private react-element? react/isValidElement)
 (defn- set-display-name [comp display-name] (obj/set comp "displayName" display-name))
 (def ^:private obj-get obj/get)
+(def ^:private callable-component-prop "__hsx_callable_component")
+(def ^:private callable-component-props-prop "__hsx_callable_component_props")
+(def ^:private callable-component-memo-prop "__hsx_callable_component_memo")
 
 (goog-define USE_MEMO true)
 
@@ -90,6 +94,11 @@
            :error-type :props-serialization-error}
           e))))
 
+(defn- hsx-props-arg->react-props
+  [original-hsx x]
+  (when-not (react-element? x)
+    (hsx-props->react-props original-hsx x)))
+
 (defn- anon-hsx-comp-factory
   [elem-f]
   (let [display-name (hsx-component->display-name elem-f)
@@ -111,6 +120,35 @@
   (fn are-props-equal?* [prev-props next-props]
     (pred (obj/get prev-props "args")
           (obj/get next-props "args"))))
+
+(defn callable-component-props?
+  [props]
+  (and (object? props)
+       (true? (obj/get props callable-component-props-prop))))
+
+(defn- callable-component?
+  [x]
+  (and (fn? x)
+       (true? (obj/get x callable-component-prop))))
+
+(defn mark-callable-component!
+  [comp memo-comp display-name]
+  (set-display-name comp display-name)
+  (set-display-name memo-comp display-name)
+  (obj/set comp callable-component-prop true)
+  (obj/set comp callable-component-memo-prop memo-comp)
+  comp)
+
+(defn create-callable-component-element
+  [original-hsx comp args meta-props]
+  (let [outer-props   (merge {:memo? USE_MEMO} meta-props)
+        returned-comp (if (:memo? outer-props)
+                        (or (obj/get comp callable-component-memo-prop) comp)
+                        comp)
+        props         (or (hsx-props->react-props original-hsx outer-props) #js {})]
+    (obj/set props callable-component-props-prop true)
+    (obj/set props "args" args)
+    (create-react-element original-hsx returned-comp props nil)))
 
 ;; The way that React function components work (especially with hooks and react/memo) is based on referential equality:
 ;; objects are considered equal based on their memory location and not their value.
@@ -172,7 +210,7 @@
 
     (= :> elem-type)
     (let [[f & args] args
-          props    (hsx-props->react-props hsx (first args))
+          props    (hsx-props-arg->react-props hsx (first args))
           children (if props
                      (rest args)
                      args)
@@ -193,6 +231,9 @@
           props         (or (hsx-props->react-props hsx outer-props) #js {})]
       (obj/extend props #js {"args" args})
       (create-react-element hsx returned-comp props nil))
+
+    (callable-component? elem-type)
+    (create-callable-component-element hsx elem-type args (meta hsx))
 
     (anon-hsx-component? elem-type)
     (let [outer-props   (merge {:memo? USE_MEMO} (meta hsx))
@@ -217,7 +258,7 @@
 
     (or (keyword? elem-type) (string? elem-type))
     (let [{:keys [tag id className]} (tag/cached-parse elem-type)
-          props    (hsx-props->react-props hsx (first args))
+          props    (hsx-props-arg->react-props hsx (first args))
           children (if props
                      (rest args)
                      args)
