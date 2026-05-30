@@ -1,5 +1,5 @@
 // test/js/hsx.test.js
-import { Button, ButtonViaReactElem, FragmentedButton, SeqButton, CallableButton, CallableButtonList, ShorthandTags } from '../../target/test/hsx-test';
+import { Button, ButtonViaReactElem, FragmentedButton, SeqButton, CallableButton, CallableButtonList, ShorthandTags, EmptyVectorChild } from '../../target/test/hsx-test';
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from "react";
 
@@ -78,4 +78,10 @@ test('ShorthandTags renders div defaults and legacy id syntax', () => {
     expect(container.querySelector('div#legacy-id').textContent).toBe('Legacy');
     expect(container.querySelector('button#action.primary').textContent).toBe('Action');
     expect(container.querySelector('button#secondary-action.secondary').textContent).toBe('Secondary');
+});
+
+test('Empty vectors render as empty children', () => {
+    render(<EmptyVectorChild />);
+
+    expect(screen.getByText(/Rendered/i)).not.toBeNull();
 });

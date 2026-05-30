@@ -293,6 +293,9 @@
   ```"
   [this]
   (cond
+    (and (vector? this) (empty? this))
+    nil
+
     (vector? this)
     (create-element-vector this)
 

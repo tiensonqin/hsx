@@ -12,7 +12,8 @@
                                      :SeqButton          hsx.components/SeqButton
                                      :CallableButton     hsx.components/CallableButton
                                      :CallableButtonList hsx.components/CallableButtonList
-                                     :ShorthandTags      hsx.components/ShorthandTags}}}}
+                                     :ShorthandTags      hsx.components/ShorthandTags
+                                     :EmptyVectorChild   hsx.components/EmptyVectorChild}}}}
   :examples
   {:target     :browser
    :output-dir "public/js"

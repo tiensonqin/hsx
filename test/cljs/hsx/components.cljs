@@ -61,3 +61,10 @@
       [:div.#legacy-id "Legacy"]
       [:button.#action.primary "Action"]
       [:button.secondary#secondary-action "Secondary"]])))
+
+(def EmptyVectorChild
+  (hsx/reactify-component
+   (fn [_props]
+     [:div
+      []
+      [:span "Rendered"]])))
