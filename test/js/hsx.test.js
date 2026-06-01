@@ -1,5 +1,5 @@
 // test/js/hsx.test.js
-import { Button, ButtonViaReactElem, FragmentedButton, SeqButton, CallableButton, CallableButtonList, ShorthandTags, EmptyVectorChild, KeyedFragmentList } from '../../target/test/hsx-test';
+import { Button, ButtonViaReactElem, FragmentedButton, SeqButton, CallableButton, CallableButtonList, ShorthandTags, EmptyVectorChild, NestedVectorChild, KeyedFragmentList } from '../../target/test/hsx-test';
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from "react";
 
@@ -84,6 +84,13 @@ test('Empty vectors render as empty children', () => {
     render(<EmptyVectorChild />);
 
     expect(screen.getByText(/Rendered/i)).not.toBeNull();
+});
+
+test('Nested vectors render as child collections', () => {
+    render(<NestedVectorChild />);
+
+    expect(screen.getByText(/Title/i).tagName).toBe('STRONG');
+    expect(screen.getByText(/Description/i).tagName).toBe('SMALL');
 });
 
 test('Keyed fragments preserve child identity when prepending items', () => {

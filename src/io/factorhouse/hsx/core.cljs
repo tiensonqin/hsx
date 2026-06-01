@@ -187,6 +187,21 @@
 (defn- hsx-component? [x]
   (instance? Component x))
 
+(defn- hsx-element-type?
+  [x]
+  (or (= :<> x)
+      (= :f> x)
+      (= :> x)
+      (hsx-component? x)
+      (callable-component? x)
+      (anon-hsx-component? x)
+      (keyword? x)
+      (string? x)))
+
+(defn- hsx-element-vector?
+  [x]
+  (hsx-element-type? (first x)))
+
 (defn- create-element-vector
   [[elem-type & args :as hsx]]
   (cond
@@ -299,7 +314,9 @@
     nil
 
     (vector? this)
-    (create-element-vector this)
+    (if (hsx-element-vector? this)
+      (create-element-vector this)
+      (into-array (map create-element this)))
 
     (seq? this)
     (into-array (map create-element this))

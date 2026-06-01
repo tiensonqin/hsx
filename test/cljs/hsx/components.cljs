@@ -69,6 +69,13 @@
       []
       [:span "Rendered"]])))
 
+(def NestedVectorChild
+  (hsx/reactify-component
+   (fn [_props]
+     [:div
+      [[:strong "Title"]
+       [:small "Description"]]])))
+
 (def KeyedFragmentList
   (hsx/reactify-component
    (fn [{:keys [items]}]
