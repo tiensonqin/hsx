@@ -1,5 +1,5 @@
 // test/js/hsx.test.js
-import { Button, ButtonViaReactElem, FragmentedButton, SeqButton, CallableButton, CallableButtonList, ShorthandTags, EmptyVectorChild } from '../../target/test/hsx-test';
+import { Button, ButtonViaReactElem, FragmentedButton, SeqButton, CallableButton, CallableButtonList, ShorthandTags, EmptyVectorChild, KeyedFragmentList } from '../../target/test/hsx-test';
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from "react";
 
@@ -84,4 +84,20 @@ test('Empty vectors render as empty children', () => {
     render(<EmptyVectorChild />);
 
     expect(screen.getByText(/Rendered/i)).not.toBeNull();
+});
+
+test('Keyed fragments preserve child identity when prepending items', () => {
+    const { rerender } = render(<KeyedFragmentList items={[
+        { id: 'a', value: 'A1' },
+        { id: 'b', value: 'B1' }
+    ]} />);
+
+    rerender(<KeyedFragmentList items={[
+        { id: 'x', value: 'X1' },
+        { id: 'a', value: 'A2' },
+        { id: 'b', value: 'B2' }
+    ]} />);
+
+    expect(screen.getByTestId('item-a').value).toBe('A1');
+    expect(screen.getByTestId('item-b').value).toBe('B1');
 });

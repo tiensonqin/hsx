@@ -13,7 +13,8 @@
                                      :CallableButton     hsx.components/CallableButton
                                      :CallableButtonList hsx.components/CallableButtonList
                                      :ShorthandTags      hsx.components/ShorthandTags
-                                     :EmptyVectorChild   hsx.components/EmptyVectorChild}}}}
+                                     :EmptyVectorChild   hsx.components/EmptyVectorChild
+                                     :KeyedFragmentList  hsx.components/KeyedFragmentList}}}}
   :examples
   {:target     :browser
    :output-dir "public/js"

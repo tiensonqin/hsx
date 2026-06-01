@@ -68,3 +68,17 @@
      [:div
       []
       [:span "Rendered"]])))
+
+(def KeyedFragmentList
+  (hsx/reactify-component
+   (fn [{:keys [items]}]
+     [:div
+      (for [item items]
+        ^{:key (:id item)}
+        [:<>
+         [:input {:data-testid (str "item-" (:id item))
+                  :default-value (:value item)
+                  :read-only true}]])])
+   (fn [props]
+     (let [items (js->clj (.-items props) :keywordize-keys true)]
+       {:items items}))))

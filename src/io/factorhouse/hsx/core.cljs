@@ -191,7 +191,9 @@
   [[elem-type & args :as hsx]]
   (cond
     (= :<> elem-type)
-    (create-react-element hsx react/Fragment nil (map create-element args))
+    (create-react-element hsx react/Fragment
+                          (hsx-props->react-props hsx (meta hsx))
+                          (map create-element args))
 
     (= :f> elem-type)
     (do
