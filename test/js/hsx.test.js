@@ -1,5 +1,5 @@
 // test/js/hsx.test.js
-import { Button, ButtonViaReactElem, FragmentedButton, SeqButton, CallableButton, CallableButtonList, ShorthandTags, EmptyVectorChild, NestedVectorChild, KeyedFragmentList } from '../../target/test/hsx-test';
+import { Button, ButtonViaReactElem, FragmentedButton, SeqButton, CallableButton, CallableButtonList, ShorthandTags, EmptyVectorChild, NestedVectorChild, RichTextVectorChild, KeyedFragmentList } from '../../target/test/hsx-test';
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from "react";
 
@@ -91,6 +91,13 @@ test('Nested vectors render as child collections', () => {
 
     expect(screen.getByText(/Title/i).tagName).toBe('STRONG');
     expect(screen.getByText(/Description/i).tagName).toBe('SMALL');
+});
+
+test('Rich text vectors render as child collections', () => {
+    render(<RichTextVectorChild />);
+
+    expect(screen.getByText(/If you lose your password,/i).tagName).toBe('P');
+    expect(screen.getByText(/keep a secure backup./i).tagName).toBe('SPAN');
 });
 
 test('Keyed fragments preserve child identity when prepending items', () => {

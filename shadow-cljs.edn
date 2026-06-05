@@ -15,6 +15,7 @@
                                      :ShorthandTags      hsx.components/ShorthandTags
                                      :EmptyVectorChild   hsx.components/EmptyVectorChild
                                      :NestedVectorChild  hsx.components/NestedVectorChild
+                                     :RichTextVectorChild hsx.components/RichTextVectorChild
                                      :KeyedFragmentList  hsx.components/KeyedFragmentList}}}}
   :examples
   {:target     :browser

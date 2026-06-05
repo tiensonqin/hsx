@@ -187,6 +187,14 @@
 (defn- hsx-component? [x]
   (instance? Component x))
 
+(def ^:private string-tag-pattern
+  #"([a-z][A-Za-z0-9:_-]*|[.#][^\s.#]+)([.#][^\s.#]+)*")
+
+(defn- string-tag?
+  [x]
+  (and (string? x)
+       (boolean (re-matches string-tag-pattern x))))
+
 (defn- hsx-element-type?
   [x]
   (or (= :<> x)
@@ -196,11 +204,21 @@
       (callable-component? x)
       (anon-hsx-component? x)
       (keyword? x)
-      (string? x)))
+      (string-tag? x)))
 
 (defn- hsx-element-vector?
   [x]
   (hsx-element-type? (first x)))
+
+(defn- create-child-elements
+  [child]
+  (if (and (vector? child) (not (hsx-element-vector? child)))
+    (map create-element child)
+    [(create-element child)]))
+
+(defn- create-children
+  [children]
+  (mapcat create-child-elements children))
 
 (defn- create-element-vector
   [[elem-type & args :as hsx]]
@@ -208,7 +226,7 @@
     (= :<> elem-type)
     (create-react-element hsx react/Fragment
                           (hsx-props->react-props hsx (meta hsx))
-                          (map create-element args))
+                          (create-children args))
 
     (= :f> elem-type)
     (do
@@ -240,7 +258,7 @@
                          :docs       "https://react.dev/reference/react/createElement#parameters"})))
       (when-let [meta-props (meta hsx)]
         (obj/extend props (hsx-props->react-props hsx meta-props)))
-      (create-react-element hsx f props (map create-element children)))
+      (create-react-element hsx f props (create-children children)))
 
     (hsx-component? elem-type)
     (let [outer-props   (merge {:memo? USE_MEMO} (meta hsx))
@@ -286,7 +304,7 @@
         (obj/set props "id" id))
       (when className
         (obj/set props "className" (str (obj/get props "className") " " className)))
-      (create-react-element hsx tag props (map create-element children)))
+      (create-react-element hsx tag props (create-children children)))
 
     :else
     (handle-error*

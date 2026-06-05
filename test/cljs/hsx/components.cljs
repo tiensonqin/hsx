@@ -76,6 +76,12 @@
       [[:strong "Title"]
        [:small "Description"]]])))
 
+(def RichTextVectorChild
+  (hsx/reactify-component
+   (fn [_props]
+     [:p ["If you lose your password, "
+          [:span "keep a secure backup."]]])))
+
 (def KeyedFragmentList
   (hsx/reactify-component
    (fn [{:keys [items]}]
